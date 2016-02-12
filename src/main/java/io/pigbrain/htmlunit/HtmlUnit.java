@@ -1,4 +1,4 @@
-package htmlunit;
+package io.pigbrain.htmlunit;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
