@@ -6,12 +6,7 @@ public class AVLTree {
 
 	public void add(int data) {
 
-		if (root == null) {
-			root = new AVLNode();
-			root.setData(data);
-		} else {
-			root = add(root, data);
-		}
+		root = add(root, data);
 	}
 	
 	private AVLNode add(AVLNode node, int data) {
