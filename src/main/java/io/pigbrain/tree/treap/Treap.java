@@ -1,6 +1,5 @@
 package io.pigbrain.tree.treap;
 
-import io.pigbrain.tree.avltree.AVLNode;
 
 import java.util.Random;
 
@@ -16,10 +15,6 @@ public class Treap {
 	public void add(int data, int priority) {
 
 		root = add(root, data, priority);
-	}
-
-	public void delete(int data) {
-
 	}
 
 	private TreapNode add(TreapNode node, int data, int priority) {
@@ -47,18 +42,93 @@ public class Treap {
 			return node;
 		}
 
-		if (node.getLeftChild() != null
-				&& node.getLeftChild().getPriority() < node.getPriority()) {
+		if (node.getLeftChild() != null	&& node.getLeftChild().getPriority() < node.getPriority()) {
 			return rotateLL(node);
 		}
 
-		if (node.getRightChild() != null
-				&& node.getRightChild().getPriority() < node.getPriority()) {
+		if (node.getRightChild() != null && node.getRightChild().getPriority() < node.getPriority()) {
 			return rotateRR(node);
 		}
-
+ 
 		return node;
 	}
+	
+
+	public void delete(int data) {
+		
+		delete(null, root, data);
+	}
+	
+	private void delete(TreapNode parentNode, TreapNode node, int data) {
+		
+		if (node == null) {
+			return;
+		}
+		
+		if (node.getData() > data) {
+			delete(node, node.getLeftChild(), data);
+			return;
+		} else if (node.getData() < data) {
+			delete(node, node.getRightChild(), data);
+			return;
+		}
+		
+		// Target node is a leaf
+		if (node.getLeftChild() == null && node.getRightChild() == null) {
+			if (parentNode != null && parentNode.getLeftChild() != null && parentNode.getLeftChild().getData() == data) {
+				parentNode.setLeftChild(null);
+			} else if (parentNode != null && parentNode.getRightChild() != null &&  parentNode.getRightChild().getData() == data) {
+				parentNode.setRightChild(null);
+			}
+			
+			return;
+		}
+		
+		// Target node has one child node.
+		if (node.getLeftChild() == null || node.getRightChild() == null) {
+			if (node.getLeftChild() == null) {
+				// rotateRR
+				TreapNode rotatedNode = rotateRR(node);
+				
+				deleteInRotated(parentNode, rotatedNode, data);
+			} else {
+				// rotateLL
+				TreapNode rotatedNode = rotateLL(node);
+				
+				deleteInRotated(parentNode, rotatedNode, data);
+			}
+			
+			return;
+		}
+		
+		// Target node's children are full
+		if (node.getLeftChild() != null && node.getRightChild() != null) {
+			if (node.getLeftChild().getPriority() < node.getRightChild().getPriority()) {
+				TreapNode rotatedNode = rotateLL(node);
+				
+				deleteInRotated(parentNode, rotatedNode, data);
+			} else {
+				TreapNode rotatedNode = rotateRR(node);
+				
+				deleteInRotated(parentNode, rotatedNode, data);
+			}
+		}
+	}
+	
+	private void deleteInRotated(TreapNode parentNode, TreapNode rotatedNode, int data) {
+		
+		if (parentNode != null && parentNode.getLeftChild() != null && parentNode.getLeftChild().getData() == data) {
+			parentNode.setLeftChild(rotatedNode);
+			delete(parentNode, parentNode.getLeftChild(), data);
+		} else if (parentNode != null && parentNode.getRightChild() != null &&  parentNode.getRightChild().getData() == data) {
+			parentNode.setRightChild(rotatedNode);;
+			delete(parentNode, parentNode.getRightChild(), data);
+		} else {
+			root = rotatedNode;
+			delete(null, root, data);
+		}
+	}
+	
 
 	private TreapNode rotateLL(TreapNode parent) {
 
@@ -80,7 +150,7 @@ public class Treap {
 		return child;
 	}
 
-	private TreapNode getRoot() {
+	public TreapNode getRoot() {
 		return root;
 	}
 

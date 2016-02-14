@@ -5,7 +5,6 @@ public class TreapNode {
 	private int data;
 	private int priority;
 
-	private TreapNode parent;
 	private TreapNode leftChild;
 	private TreapNode rightChild;
 
@@ -23,14 +22,6 @@ public class TreapNode {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
-	}
-
-	public TreapNode getParent() {
-		return parent;
-	}
-
-	public void setParent(TreapNode parent) {
-		this.parent = parent;
 	}
 
 	public TreapNode getLeftChild() {
